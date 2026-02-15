@@ -25,7 +25,6 @@ Host openclaw
   User root
   Port 22
   IdentityFile ~/.ssh/id_ed25519
-
 ```
 
 Now SSH into your new server ("ssh openclaw"), install zsh, curl, and git
@@ -34,7 +33,6 @@ Now SSH into your new server ("ssh openclaw"), install zsh, curl, and git
 sudo apt update && sudo apt install zsh curl git -y
 chsh -s $(which zsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
 ```
 
 ## OpenClaw Hetzner Guide
@@ -60,14 +58,12 @@ build:
   context: .
   args:
     OPENCLAW_DOCKER_APT_PACKAGES: "postgresql-client"
-
 ```
 
 * Add the the following line to the environment section:
 
 ```
 - <YOUR_APP_NAME>_READONLY_DATABASE_URL=${<YOUR_APP_NAME>_READONLY_DATABASE_URL}
-
 ```
 
 * Ensure to keep the `--allow-unconfigured` line for now. We will remove it later
@@ -86,14 +82,12 @@ This can be done later.
 
 ```
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js devices list
-
 ```
 
 * You will see a UUID request id; copy this, then run the following but replace the UUID at the end:
 
 ```
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js approve <UUID>
-
 ```
 
 You should now be able to access OpenClaw via your machine’s browser.
@@ -106,7 +100,6 @@ Next we need to configure our chat setup with a model provider.
 
 ```
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js configure
-
 ```
 
 * Select Local
@@ -120,14 +113,12 @@ docker exec -it openclaw-openclaw-gateway-1 node dist/index.js configure
 
 ```
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js configure
-
 ```
 
 2. Then select Channels and select Telegram. Follow the guide and then message @BotFather on Telegram. You will get a pairing code, with that, run:
 
 ```
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js pairing approve telegram <pairing code>
-
 ```
 
 3. Message the agent via Telegram to verify it is working. You should be able to message from both the site and via Telegram now.
@@ -143,7 +134,6 @@ docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gatewa
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gateway.bind lan
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gateway.auth.mode token
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gateway.auth.token "<your token here>"
-
 ```
 
 2. Then delete the "--allow-unconfigured" line in the docker-compose.yml file, then restart docker-compose instance:
@@ -151,7 +141,6 @@ docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gatewa
 ```
 docker compose down
 docker compose up -d openclaw-gateway
-
 ```
 
 3. Verify it works by running the following on your desktop machine:
@@ -159,7 +148,6 @@ docker compose up -d openclaw-gateway
 ```
 # YOU MUST RUN THIS IF YOU WANT TO VISIT THE WEB VIEWER
 ssh -N -L 18789:127.0.0.1:18789 openclaw
-
 ```
 
 4. Then visiting: [http://127.0.0.1:18789/openclaw/](http://127.0.0.1:18789/openclaw/) (bookmark this).
@@ -194,7 +182,6 @@ chmod 644 /opt/openclaw/ssh/id_ed25519_github.pub /opt/openclaw/ssh/known_hosts
 
 git config --global user.name "Your Name"
 git config --global user.email "Your Email"
-
 ```
 
 2. Add the contents of "/opt/openclaw/ssh/id_ed25519_github.pub" to GitHub as an SSH token.
@@ -205,7 +192,6 @@ git config --global user.email "Your Email"
 volumes:
   - /opt/openclaw/ssh:/home/node/.ssh:ro
   - /opt/openclaw/repos:/repos
-
 ```
 
 4. And add the following under "openclaw-gateway":
@@ -214,7 +200,6 @@ volumes:
 services:
   openclaw-gateway:
     user: "1000:1000"
-
 ```
 
 5. Then restart your docker-compose instance:
@@ -222,7 +207,6 @@ services:
 ```
 docker compose down
 docker compose up -d openclaw-gateway
-
 ```
 
 ## Add the Ability to Read from Database
@@ -232,14 +216,12 @@ docker compose up -d openclaw-gateway
 ```
 cd /opt/openclaw/repos
 git clone <your repo URL>
-
 ```
 
 2. Verify it is working with the following command:
 
 ```
 docker exec -it openclaw-openclaw-gateway-1 sh -lc 'cd /repos/<your repo> && git pull'
-
 ```
 
 3. Start a new chat with your agent by running "/new" then paste in the following text:
