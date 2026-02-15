@@ -19,7 +19,7 @@ Here we will be provisioning a cloud VPS on Hetzner with 8 vCPUs and 16 GB RAM f
 
 Before doing anything else, set up a simple alias for SSH since you’ll want to get back to this. Add the following to your SSH config on your personal machine in "~/.ssh/config" for easy access (i.e. "ssh openclaw" — you can name it whatever you want):
 
-```
+```sshconfig
 Host openclaw
   HostName <your ip here>
   User root
@@ -29,7 +29,7 @@ Host openclaw
 
 Now SSH into your new server ("ssh openclaw"), install zsh, curl, and git
 
-```
+```bash
 sudo apt update && sudo apt install zsh curl git -y
 chsh -s $(which zsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -53,7 +53,7 @@ Fully delete the existing docker-compose.yml file and replace it with the one pr
 
 * Replace "build" with the following
 
-```
+```yaml
 build:
   context: .
   args:
@@ -62,7 +62,7 @@ build:
 
 * Add the the following line to the environment section:
 
-```
+```yaml
 - <YOUR_APP_NAME>_READONLY_DATABASE_URL=${<YOUR_APP_NAME>_READONLY_DATABASE_URL}
 ```
 
@@ -80,13 +80,13 @@ This can be done later.
 * You will see "pairing required" in the OpenClaw dashboard
 * On the SSH machine, run
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js devices list
 ```
 
 * You will see a UUID request id; copy this, then run the following but replace the UUID at the end:
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js approve <UUID>
 ```
 
@@ -98,7 +98,7 @@ Next we need to configure our chat setup with a model provider.
 
 1. From the SSH machine run:
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js configure
 ```
 
@@ -111,13 +111,13 @@ docker exec -it openclaw-openclaw-gateway-1 node dist/index.js configure
 
 1. From the SSH machine run:
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js configure
 ```
 
 2. Then select Channels and select Telegram. Follow the guide and then message @BotFather on Telegram. You will get a pairing code, with that, run:
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js pairing approve telegram <pairing code>
 ```
 
@@ -129,7 +129,7 @@ You can use "slash commands" with your Telegram bot. If you type "/" you will se
 
 1. Use the token you added to your .env in the last step:
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gateway.mode local
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gateway.bind lan
 docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gateway.auth.mode token
@@ -138,14 +138,14 @@ docker exec -it openclaw-openclaw-gateway-1 node dist/index.js config set gatewa
 
 2. Then delete the "--allow-unconfigured" line in the docker-compose.yml file, then restart docker-compose instance:
 
-```
+```bash
 docker compose down
 docker compose up -d openclaw-gateway
 ```
 
 3. Verify it works by running the following on your desktop machine:
 
-```
+```bash
 # YOU MUST RUN THIS IF YOU WANT TO VISIT THE WEB VIEWER
 ssh -N -L 18789:127.0.0.1:18789 openclaw
 ```
@@ -156,7 +156,7 @@ ssh -N -L 18789:127.0.0.1:18789 openclaw
 
 1. Set up SSH for GitHub (be sure to update the last 3 lines with your information):
 
-```
+```bash
 # Create shared SSH folder on host machine
 mkdir -p /opt/openclaw/ssh
 mkdir -p /opt/openclaw/repos
@@ -188,7 +188,7 @@ git config --global user.email "Your Email"
 
 3. Next edit your docker-compose.yml file to add the following volumes:
 
-```
+```yaml
 volumes:
   - /opt/openclaw/ssh:/home/node/.ssh:ro
   - /opt/openclaw/repos:/repos
@@ -196,7 +196,7 @@ volumes:
 
 4. And add the following under "openclaw-gateway":
 
-```
+```yaml
 services:
   openclaw-gateway:
     user: "1000:1000"
@@ -204,7 +204,7 @@ services:
 
 5. Then restart your docker-compose instance:
 
-```
+```bash
 docker compose down
 docker compose up -d openclaw-gateway
 ```
@@ -213,14 +213,14 @@ docker compose up -d openclaw-gateway
 
 1. On the host machine, clone the repository in the shared "repos" folder we created:
 
-```
+```bash
 cd /opt/openclaw/repos
 git clone <your repo URL>
 ```
 
 2. Verify it is working with the following command:
 
-```
+```bash
 docker exec -it openclaw-openclaw-gateway-1 sh -lc 'cd /repos/<your repo> && git pull'
 ```
 
