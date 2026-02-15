@@ -250,8 +250,8 @@ docker exec -it openclaw-openclaw-gateway-1 sh -lc 'cd /repos/<your repo> && git
 >
 > 3. Under `/repos/<your repo name>` is the repo for <repo name>. Read the root README.md for a brief overview of what it does. Commit this to memory.
 >
-> 5. Using the repo, along with access to readonly environment variable that you have access to (<YOUR_APP_NAME>_READONLY_DATABASE_URL), you should be able to answer questions using psql by querying our production database. For information about the schema, look to <path to schema code>. All the schema info you need is in there. You should be able to answer query questions accordingly if I ever ask and know how to answer them by making SQL queries to get the information that you need. Commit this to memory.
+> 4. Using the repo, along with access to readonly environment variable that you have access to (<YOUR_APP_NAME>_READONLY_DATABASE_URL), you should be able to answer questions using psql by querying our production database. For information about the schema, look to <path to schema code>. All the schema info you need is in there. You should be able to answer query questions accordingly if I ever ask and know how to answer them by making SQL queries to get the information that you need. Commit this to memory.
 
 4. Verify it is working by asking a question that requires information from your database such as:
 
-1. "How many sign ups did we get in the last 24 hours for <app name>?"
+> "How many sign ups did we get in the last 24 hours for <app name>?"
